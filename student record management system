@@ -1,0 +1,789 @@
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <iomanip>
+#include <algorithm>
+#include <string>
+
+using namespace std;
+
+// ======================================================
+// STUDENT CLASS
+// ======================================================
+
+class Student
+{
+private:
+    int studentID;
+    string name;
+    string department;
+    int semester;
+
+    int marks[5];
+
+    int total;
+    float percentage;
+    string grade;
+    string result;
+
+public:
+
+    // --------------------------------------------------
+    // Constructor
+    // --------------------------------------------------
+
+    Student()
+    {
+        studentID = 0;
+        name = "";
+        department = "";
+        semester = 0;
+
+        for (int i = 0; i < 5; i++)
+        {
+            marks[i] = 0;
+        }
+
+        total = 0;
+        percentage = 0;
+        grade = "";
+        result = "";
+    }
+
+    // --------------------------------------------------
+    // Get Student ID
+    // --------------------------------------------------
+
+    int getID() const
+    {
+        return studentID;
+    }
+
+    // --------------------------------------------------
+    // Get Student Name
+    // --------------------------------------------------
+
+    string getName() const
+    {
+        return name;
+    }
+
+    // --------------------------------------------------
+    // STUDENT MODULE
+    // Add Student
+    // --------------------------------------------------
+
+    void addStudent()
+    {
+        cout << "\n========================================\n";
+        cout << "        ADD STUDENT DETAILS\n";
+        cout << "========================================\n";
+
+        cout << "Enter Student ID: ";
+        cin >> studentID;
+
+        cin.ignore();
+
+        cout << "Enter Student Name: ";
+        getline(cin, name);
+
+        cout << "Enter Department: ";
+        getline(cin, department);
+
+        cout << "Enter Semester: ";
+        cin >> semester;
+
+        cout << "\nStudent details added successfully!\n";
+    }
+
+    // --------------------------------------------------
+    // MARKS MODULE
+    // Enter Marks
+    // --------------------------------------------------
+
+    void enterMarks()
+    {
+        cout << "\n========================================\n";
+        cout << "          ENTER SUBJECT MARKS\n";
+        cout << "========================================\n";
+
+        for (int i = 0; i < 5; i++)
+        {
+            do
+            {
+                cout << "Enter marks for Subject " << i + 1
+                     << " (0-100): ";
+
+                cin >> marks[i];
+
+                if (marks[i] < 0 || marks[i] > 100)
+                {
+                    cout << "Invalid marks! Enter between 0 and 100.\n";
+                }
+
+            } while (marks[i] < 0 || marks[i] > 100);
+        }
+
+        cout << "\nMarks entered successfully!\n";
+    }
+
+    // --------------------------------------------------
+    // RESULT MODULE
+    // Calculate Result
+    // --------------------------------------------------
+
+    void calculateResult()
+    {
+        total = 0;
+
+        // Calculate total marks
+        for (int i = 0; i < 5; i++)
+        {
+            total += marks[i];
+        }
+
+        // Calculate percentage
+        percentage = total / 5.0;
+
+        // Check pass/fail
+        result = "PASS";
+
+        for (int i = 0; i < 5; i++)
+        {
+            if (marks[i] < 40)
+            {
+                result = "FAIL";
+                break;
+            }
+        }
+
+        // Calculate grade
+        if (result == "FAIL")
+        {
+            grade = "F";
+        }
+        else if (percentage >= 90)
+        {
+            grade = "A+";
+        }
+        else if (percentage >= 80)
+        {
+            grade = "A";
+        }
+        else if (percentage >= 70)
+        {
+            grade = "B";
+        }
+        else if (percentage >= 60)
+        {
+            grade = "C";
+        }
+        else if (percentage >= 50)
+        {
+            grade = "D";
+        }
+        else
+        {
+            grade = "E";
+        }
+    }
+
+    // --------------------------------------------------
+    // DISPLAY RESULT
+    // --------------------------------------------------
+
+    void displayResult() const
+    {
+        cout << "\n========================================\n";
+        cout << "           STUDENT RESULT\n";
+        cout << "========================================\n";
+
+        cout << "Student ID   : " << studentID << endl;
+        cout << "Name         : " << name << endl;
+        cout << "Department   : " << department << endl;
+        cout << "Semester     : " << semester << endl;
+
+        cout << "\nSubject Marks\n";
+        cout << "----------------------------------------\n";
+
+        for (int i = 0; i < 5; i++)
+        {
+            cout << "Subject " << i + 1
+                 << "     : " << marks[i] << endl;
+        }
+
+        cout << "----------------------------------------\n";
+
+        cout << "Total Marks  : " << total << " / 500" << endl;
+        cout << fixed << setprecision(2);
+        cout << "Percentage   : " << percentage << "%" << endl;
+        cout << "Grade        : " << grade << endl;
+        cout << "Result       : " << result << endl;
+
+        cout << "========================================\n";
+    }
+
+    // --------------------------------------------------
+    // SEARCH / SUMMARY DISPLAY
+    // --------------------------------------------------
+
+    void displayShortDetails() const
+    {
+        cout << left
+             << setw(12) << studentID
+             << setw(22) << name
+             << setw(15) << department
+             << setw(12) << percentage
+             << setw(10) << grade
+             << setw(10) << result
+             << endl;
+    }
+
+    // --------------------------------------------------
+    // UPDATE STUDENT DETAILS
+    // --------------------------------------------------
+
+    void updateStudent()
+    {
+        int choice;
+
+        cout << "\n========================================\n";
+        cout << "        UPDATE STUDENT DETAILS\n";
+        cout << "========================================\n";
+
+        cout << "1. Update Name\n";
+        cout << "2. Update Department\n";
+        cout << "3. Update Semester\n";
+        cout << "4. Update Marks\n";
+        cout << "Enter choice: ";
+        cin >> choice;
+
+        cin.ignore();
+
+        switch (choice)
+        {
+        case 1:
+            cout << "Enter new name: ";
+            getline(cin, name);
+            break;
+
+        case 2:
+            cout << "Enter new department: ";
+            getline(cin, department);
+            break;
+
+        case 3:
+            cout << "Enter new semester: ";
+            cin >> semester;
+            break;
+
+        case 4:
+            enterMarks();
+            calculateResult();
+            break;
+
+        default:
+            cout << "Invalid choice!\n";
+            return;
+        }
+
+        cout << "Student details updated successfully!\n";
+    }
+
+    // --------------------------------------------------
+    // FILE HANDLING
+    // Save Student
+    // --------------------------------------------------
+
+    void saveToFile(ofstream &file) const
+    {
+        file << studentID << '\n';
+        file << name << '\n';
+        file << department << '\n';
+        file << semester << '\n';
+
+        for (int i = 0; i < 5; i++)
+        {
+            file << marks[i] << " ";
+        }
+
+        file << '\n';
+
+        file << total << '\n';
+        file << percentage << '\n';
+        file << grade << '\n';
+        file << result << '\n';
+    }
+
+    // --------------------------------------------------
+    // FILE HANDLING
+    // Load Student
+    // --------------------------------------------------
+
+    bool loadFromFile(ifstream &file)
+    {
+        if (!(file >> studentID))
+        {
+            return false;
+        }
+
+        file.ignore();
+
+        getline(file, name);
+        getline(file, department);
+
+        file >> semester;
+
+        for (int i = 0; i < 5; i++)
+        {
+            file >> marks[i];
+        }
+
+        file >> total;
+        file >> percentage;
+
+        file.ignore();
+
+        getline(file, grade);
+        getline(file, result);
+
+        return true;
+    }
+};
+
+
+// ======================================================
+// FILE FUNCTIONS
+// ======================================================
+
+// ------------------------------------------------------
+// Save all records
+// ------------------------------------------------------
+
+void saveAllRecords(const vector<Student> &students)
+{
+    ofstream file("students.txt");
+
+    if (!file)
+    {
+        cout << "\nError: Unable to open file!\n";
+        return;
+    }
+
+    for (const Student &student : students)
+    {
+        student.saveToFile(file);
+    }
+
+    file.close();
+
+    cout << "\nRecords saved successfully!\n";
+}
+
+
+// ------------------------------------------------------
+// Load all records
+// ------------------------------------------------------
+
+void loadAllRecords(vector<Student> &students)
+{
+    ifstream file("students.txt");
+
+    if (!file)
+    {
+        // File does not exist yet
+        return;
+    }
+
+    Student student;
+
+    while (student.loadFromFile(file))
+    {
+        students.push_back(student);
+    }
+
+    file.close();
+}
+
+
+// ======================================================
+// SEARCH MODULE
+// ======================================================
+
+// ------------------------------------------------------
+// Search by Student ID
+// ------------------------------------------------------
+
+void searchByID(const vector<Student> &students)
+{
+    int id;
+
+    cout << "\nEnter Student ID to search: ";
+    cin >> id;
+
+    bool found = false;
+
+    for (const Student &student : students)
+    {
+        if (student.getID() == id)
+        {
+            student.displayResult();
+            found = true;
+            break;
+        }
+    }
+
+    if (!found)
+    {
+        cout << "\nStudent record not found!\n";
+    }
+}
+
+
+// ------------------------------------------------------
+// Search by Student Name
+// ------------------------------------------------------
+
+void searchByName(const vector<Student> &students)
+{
+    string name;
+
+    cin.ignore();
+
+    cout << "\nEnter Student Name to search: ";
+    getline(cin, name);
+
+    bool found = false;
+
+    for (const Student &student : students)
+    {
+        if (student.getName() == name)
+        {
+            student.displayResult();
+            found = true;
+        }
+    }
+
+    if (!found)
+    {
+        cout << "\nStudent record not found!\n";
+    }
+}
+
+
+// ======================================================
+// SORT MODULE
+// ======================================================
+
+void sortByID(vector<Student> &students)
+{
+    sort(students.begin(), students.end(),
+         [](const Student &a, const Student &b)
+         {
+             return a.getID() < b.getID();
+         });
+
+    cout << "\nRecords sorted by Student ID.\n";
+}
+
+
+void sortByName(vector<Student> &students)
+{
+    sort(students.begin(), students.end(),
+         [](const Student &a, const Student &b)
+         {
+             return a.getName() < b.getName();
+         });
+
+    cout << "\nRecords sorted by Student Name.\n";
+}
+
+
+// ======================================================
+// DISPLAY ALL STUDENTS
+// ======================================================
+
+void displayAllStudents(const vector<Student> &students)
+{
+    if (students.empty())
+    {
+        cout << "\nNo student records available.\n";
+        return;
+    }
+
+    cout << "\n==============================================================\n";
+    cout << "                    ALL STUDENT RECORDS\n";
+    cout << "==============================================================\n";
+
+    cout << left
+         << setw(12) << "ID"
+         << setw(22) << "Name"
+         << setw(15) << "Department"
+         << setw(12) << "Percentage"
+         << setw(10) << "Grade"
+         << setw(10) << "Result"
+         << endl;
+
+    cout << "--------------------------------------------------------------\n";
+
+    for (const Student &student : students)
+    {
+        student.displayShortDetails();
+    }
+
+    cout << "==============================================================\n";
+}
+
+
+// ======================================================
+// MAIN MENU
+// ======================================================
+
+void displayMenu()
+{
+    cout << "\n\n";
+    cout << "==============================================\n";
+    cout << "          STUDENT RESULT SYSTEM\n";
+    cout << "==============================================\n";
+
+    cout << "1. Add Student\n";
+    cout << "2. Enter / Update Marks\n";
+    cout << "3. Calculate Result\n";
+    cout << "4. Display All Students\n";
+    cout << "5. Search Student by ID\n";
+    cout << "6. Search Student by Name\n";
+    cout << "7. Update Student Details\n";
+    cout << "8. Sort Records by ID\n";
+    cout << "9. Sort Records by Name\n";
+    cout << "10. Save Records\n";
+    cout << "11. Exit\n";
+
+    cout << "==============================================\n";
+    cout << "Enter your choice: ";
+}
+
+
+// ======================================================
+// MAIN FUNCTION
+// ======================================================
+
+int main()
+{
+    vector<Student> students;
+
+    // -----------------------------------------------
+    // Load existing records when program starts
+    // -----------------------------------------------
+
+    loadAllRecords(students);
+
+    cout << "\n==============================================\n";
+    cout << "     WELCOME TO STUDENT RESULT SYSTEM\n";
+    cout << "==============================================\n";
+
+    if (!students.empty())
+    {
+        cout << students.size()
+             << " existing record(s) loaded from file.\n";
+    }
+    else
+    {
+        cout << "No existing records found.\n";
+    }
+
+    int choice;
+
+    do
+    {
+        displayMenu();
+        cin >> choice;
+
+        switch (choice)
+        {
+        // -------------------------------------------
+        // ADD STUDENT
+        // -------------------------------------------
+
+        case 1:
+        {
+            Student student;
+
+            student.addStudent();
+            student.enterMarks();
+            student.calculateResult();
+
+            students.push_back(student);
+
+            cout << "\nStudent record created successfully!\n";
+
+            break;
+        }
+
+        // -------------------------------------------
+        // ENTER / UPDATE MARKS
+        // -------------------------------------------
+
+        case 2:
+        {
+            int id;
+            bool found = false;
+
+            cout << "\nEnter Student ID: ";
+            cin >> id;
+
+            for (Student &student : students)
+            {
+                if (student.getID() == id)
+                {
+                    student.enterMarks();
+                    student.calculateResult();
+
+                    found = true;
+
+                    cout << "\nMarks updated successfully!\n";
+                    break;
+                }
+            }
+
+            if (!found)
+            {
+                cout << "\nStudent not found!\n";
+            }
+
+            break;
+        }
+
+        // -------------------------------------------
+        // CALCULATE RESULT
+        // -------------------------------------------
+
+        case 3:
+        {
+            int id;
+            bool found = false;
+
+            cout << "\nEnter Student ID: ";
+            cin >> id;
+
+            for (Student &student : students)
+            {
+                if (student.getID() == id)
+                {
+                    student.calculateResult();
+                    student.displayResult();
+
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found)
+            {
+                cout << "\nStudent not found!\n";
+            }
+
+            break;
+        }
+
+        // -------------------------------------------
+        // DISPLAY ALL
+        // -------------------------------------------
+
+        case 4:
+            displayAllStudents(students);
+            break;
+
+        // -------------------------------------------
+        // SEARCH BY ID
+        // -------------------------------------------
+
+        case 5:
+            searchByID(students);
+            break;
+
+        // -------------------------------------------
+        // SEARCH BY NAME
+        // -------------------------------------------
+
+        case 6:
+            searchByName(students);
+            break;
+
+        // -------------------------------------------
+        // UPDATE STUDENT
+        // -------------------------------------------
+
+        case 7:
+        {
+            int id;
+            bool found = false;
+
+            cout << "\nEnter Student ID: ";
+            cin >> id;
+
+            for (Student &student : students)
+            {
+                if (student.getID() == id)
+                {
+                    student.updateStudent();
+
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found)
+            {
+                cout << "\nStudent not found!\n";
+            }
+
+            break;
+        }
+
+        // -------------------------------------------
+        // SORT BY ID
+        // -------------------------------------------
+
+        case 8:
+            sortByID(students);
+            displayAllStudents(students);
+            break;
+
+        // -------------------------------------------
+        // SORT BY NAME
+        // -------------------------------------------
+
+        case 9:
+            sortByName(students);
+            displayAllStudents(students);
+            break;
+
+        // -------------------------------------------
+        // SAVE RECORDS
+        // -------------------------------------------
+
+        case 10:
+            saveAllRecords(students);
+            break;
+
+        // -------------------------------------------
+        // EXIT
+        // -------------------------------------------
+
+        case 11:
+            saveAllRecords(students);
+
+            cout << "\n==============================================\n";
+            cout << " Thank you for using Student Result System!\n";
+            cout << "==============================================\n";
+
+            break;
+
+        default:
+            cout << "\nInvalid choice! Please try again.\n";
+        }
+
+    } while (choice != 11);
+
+    return 0;
+}
